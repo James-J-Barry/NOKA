@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Welcome back, {userInfo?.username || user.email?.split('@')[0]}!
+            Welcome, {userInfo?.username || user.email?.split('@')[0]}!
           </h1>
         </div>
         
