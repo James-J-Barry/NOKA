@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
+import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { auth, db } from '../firebase/firebase';
 
@@ -14,6 +14,9 @@ const Signup: React.FC = () => {
   
   const navigate = useNavigate();
 
+  const normalizeUsername = (name: string) =>
+    name.trim().toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9._-]/g, '');
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -22,43 +25,54 @@ const Signup: React.FC = () => {
       setError("Passwords don't match");
       return;
     }
-    
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
     }
-    
+
+    const normalized = normalizeUsername(username);
+    if (!normalized) {
+      setError('Please enter a valid username (letters, numbers, dot, underscore, hyphen).');
+      return;
+    }
+
     try {
       setError('');
       setLoading(true);
-      
-      // Create the user with Firebase Authentication
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(userCredential);
 
-      interface newUser {
-        uid: string;
-        username: string;
-        email: string;
-        createdAt: Date;
-      }
-
-      const user: newUser = {
-        uid: userCredential.user.uid,
-        username,
-        email,
-        createdAt: new Date(),
-      };
+      const uid = userCredential.user.uid;
+      const usernameRef = doc(db, 'usernames', normalized);
+      const userRef = doc(db, 'users', uid);
 
       try {
-        await addDoc(collection(db, "users"), {
-          ...user,
+        await runTransaction(db, async (tx) => {
+          const unameSnap = await tx.get(usernameRef);
+          if (unameSnap.exists()) {
+            throw new Error('That username is already taken.');
+          }
+          tx.set(usernameRef, {
+            uid,
+            original: username,
+            createdAt: serverTimestamp(),
+          });
+          tx.set(userRef, {
+            uid,
+            username: normalized,
+            email,
+            createdAt: serverTimestamp(),
+          });
         });
-      } catch (e) {
-        console.error("Error adding document: ", e);
-        throw e; 
+      } catch (err: any) {
+        // Roll back the just-created auth user if username was taken
+        try {
+          await deleteUser(userCredential.user);
+        } catch {}
+        throw err;
       }
-
+    
       navigate('/Dashboard');
     } catch (err: any) {
       setError(err.message || 'Failed to create an account');
