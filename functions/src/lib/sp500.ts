@@ -1,0 +1,36 @@
+export type StaticConstituent = { symbol: string; name: string };
+
+// Curated subset of S&P 500 tickers for fallback mode.
+// Add more as needed; we only need 6/day.
+export const STATIC_SP500: StaticConstituent[] = [
+  { symbol: 'AAPL', name: 'Apple Inc.' },
+  { symbol: 'MSFT', name: 'Microsoft Corporation' },
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.' },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation' },
+  { symbol: 'GOOGL', name: 'Alphabet Inc. Class A' },
+  { symbol: 'META', name: 'Meta Platforms, Inc.' },
+  { symbol: 'BRK.B', name: 'Berkshire Hathaway Inc. Class B' },
+  { symbol: 'XOM', name: 'Exxon Mobil Corporation' },
+  { symbol: 'UNH', name: 'UnitedHealth Group Incorporated' },
+  { symbol: 'JNJ', name: 'Johnson & Johnson' },
+  { symbol: 'V', name: 'Visa Inc.' },
+  { symbol: 'JPM', name: 'JPMorgan Chase & Co.' },
+  { symbol: 'PG', name: 'Procter & Gamble Company' },
+  { symbol: 'MA', name: 'Mastercard Incorporated' },
+  { symbol: 'HD', name: 'Home Depot, Inc.' },
+  { symbol: 'LLY', name: 'Eli Lilly and Company' },
+  { symbol: 'BAC', name: 'Bank of America Corporation' },
+  { symbol: 'PFE', name: 'Pfizer Inc.' },
+  { symbol: 'KO', name: 'Coca-Cola Company' },
+  { symbol: 'PEP', name: 'PepsiCo, Inc.' },
+  { symbol: 'DIS', name: 'Walt Disney Company' },
+  { symbol: 'CSCO', name: 'Cisco Systems, Inc.' },
+  { symbol: 'ADBE', name: 'Adobe Inc.' },
+  { symbol: 'NFLX', name: 'Netflix, Inc.' },
+  { symbol: 'ORCL', name: 'Oracle Corporation' },
+  { symbol: 'INTC', name: 'Intel Corporation' },
+  { symbol: 'CRM', name: 'Salesforce, Inc.' },
+  { symbol: 'ABT', name: 'Abbott Laboratories' },
+  { symbol: 'TMO', name: 'Thermo Fisher Scientific Inc.' },
+  { symbol: 'WMT', name: 'Walmart Inc.' },
+];

@@ -142,6 +142,14 @@ const Dashboard: React.FC = () => {
             Log Out
           </button>
         </div>
+        <div className="bg-white dark:bg-gray-800 rounded-b-lg shadow-sm p-6 border-t border-gray-200 dark:border-gray-700">
+          <button 
+            onClick={() => navigate('/DailyPuzzle')} 
+            className="w-full py-2.5 px-4 rounded-md bg-red-600 text-white font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+          >
+            Puzzle
+          </button>
+        </div>
       </div>
     </div>
   );
